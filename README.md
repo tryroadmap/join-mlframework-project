@@ -13,14 +13,20 @@ wget $s3_address
 mv *.zip ./mlframework/input/
 cd mlframework;
 
+conda update conda
+conda upgrade conda
+conda --version #4.7 above
+
 conda create -n mlframework36 python=3.6 anaconda
+
 source activate mlframework36
-conda install anaconda-client  #needed for binstart yaml
-conda install -n mlframework36 environment.yml
+conda env update --file environment.yml
+conda info --envs
+
 
 chmod +x run.sh; ./run.sh
-
-
+source deactivate
+#conda remove -n mlframework36 -all
 ```
 
 [abhishek repo](https://github.com/abhishekkrthakur/mlframework)
