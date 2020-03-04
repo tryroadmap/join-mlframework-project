@@ -50,4 +50,6 @@ def predict():
 
 if __name__ == "__main__":
     submission = predict()
+    if not os.path.exists('models'):
+        os.mkdir('models')
     submission.to_csv(f"models/{MODEL}.csv", index=False)
