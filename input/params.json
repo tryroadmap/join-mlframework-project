@@ -1,0 +1,14 @@
+{
+    "target": "Survived",
+    "dropFeatures": [
+        "PassengerId",
+        "Name",
+        "Ticket",
+        "Cabin"
+    ],
+    "categoricals": [
+        "Pclass",
+        "Sex",
+        "Embarked"
+    ]
+}
