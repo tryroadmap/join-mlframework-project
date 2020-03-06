@@ -13,10 +13,8 @@ import joblib
 from . import dispatcher
 
 TRAINING_DATA_DIR = os.environ.get("TRAINING_DATA")
-TEST_DATA_DIR = os.environ.get("TEST_DATA")
 FOLD = int(os.environ.get("FOLD"))
 MODEL = os.environ.get("MODEL")
-
 with open(os.environ.get("PARAMS")) as json_params:
     PARAMS = json.load(json_params)
 
@@ -30,7 +28,6 @@ FOLD_MAPPING = {
 
 def main():
     ## Read in data, perform basic cleaning
-    test_df = pd.read_csv(TEST_DATA_DIR)
     df = pd.read_csv(TRAINING_DATA_DIR)
     df = drop_columns(df)
     convert_categoricals_to_num(df)
@@ -47,10 +44,10 @@ def main():
     preds = clf.predict(valid_df)
     print(metrics.roc_auc_score(yvalid, preds))
 
-    # joblib.dump(label_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
-    # joblib.dump(imputer, f"models/{MODEL}_{FOLD}_imputer.pkl")
-    # joblib.dump(clf, f"models/{MODEL}_{FOLD}.pkl")
-    # joblib.dump(train_df.columns, f"models/{MODEL}_{FOLD}_columns.pkl")
+    if not os.path.exists('models'):
+        os.mkdir('models')
+    joblib.dump(clf, f"models/{MODEL}_{FOLD}_pipe.pkl")
+    joblib.dump(train_df.columns, f"models/{MODEL}_{FOLD}_columns.pkl")
 
 def convert_categoricals_to_num(df):
     """Converts all categorical object types to numerical representation"""
@@ -98,7 +95,6 @@ def build_encoder(train_df):
     cat_var_idxs = [list(train_df.columns).index(c) for c in PARAMS['categoricals']]
     enc = ('encode', OneHotEncoder(handle_unknown='ignore'), cat_var_idxs)
     return ColumnTransformer(transformers = [enc], remainder='passthrough')
-
 
 if __name__ == "__main__":
     main()
