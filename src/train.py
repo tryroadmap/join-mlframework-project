@@ -42,8 +42,9 @@ def main():
     ## Test model on validation set
     # preds = clf.predict_proba(valid_df)[:, 1]
     preds = clf.predict(valid_df)
-    print(metrics.roc_auc_score(yvalid, preds))
+    print("Training Accuracy:", metrics.roc_auc_score(yvalid, preds))
 
+    ## Store model info
     if not os.path.exists('models'):
         os.mkdir('models')
     joblib.dump(clf, f"models/{MODEL}_{FOLD}_pipe.pkl")
@@ -87,7 +88,8 @@ def build_pipeline(train_df):
 def build_imputer(train_df):
     cat_vars = PARAMS['categoricals']
     num_vars = [c for c in train_df.columns if c not in cat_vars] 
-    cat_imp = ('cat_impute', SimpleImputer(strategy='most_frequent'), cat_vars)
+    # cat_imp = ('cat_impute', SimpleImputer(strategy='most_frequent'), cat_vars)
+    cat_imp = ('cat_impute', SimpleImputer(strategy='constant', fill_value='none'), cat_vars)
     num_imp = ('num_impute', SimpleImputer(strategy='mean'), num_vars)
     return ColumnTransformer(transformers = [cat_imp, num_imp], remainder='passthrough')
 

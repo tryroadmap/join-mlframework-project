@@ -7,4 +7,4 @@ export MODEL=$1
 
 FOLD=0 python -m src.train
 #add more folds
-# python -m src.predict
+python -m src.predict
